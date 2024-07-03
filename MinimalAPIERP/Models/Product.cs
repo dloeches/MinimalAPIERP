@@ -6,7 +6,7 @@ namespace ERP;
 
 [Index("CategoryId", Name = "IX_CategoryId")]
 [Index("ProductGuid", Name = "IX_ProductGuid", IsUnique = true)]
-public partial class Product
+public record Product
 {
     [Key]
     public int ProductId { get; set; }
@@ -34,7 +34,7 @@ public partial class Product
     public string Description { get; set; } = null!;
 
     [Column(TypeName = "datetime")]
-    public DateTime Created { get; set; }
+    public DateTime Created { get; set; } = DateTime.Now;
 
     public string ProductDetails { get; set; } = null!;
 

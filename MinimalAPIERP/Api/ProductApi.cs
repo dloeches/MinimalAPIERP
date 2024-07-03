@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ERP.Data;
-using MinimalAPIERP.Dtos;
+using BlazorStoreApp.Infraestructura.Dtos;
 using MinimalAPIERP.Servicios;
 
 namespace ERP.Api;
@@ -14,17 +14,37 @@ internal static class ProductApi
         var group = routes.MapGroup("/erp")
             .WithTags("Product Api");
 
-        group.MapGet("/products", async Task<Results<Ok<IList<ProductDto>>, NotFound>> (AppDbContext db, IMapper mapper) =>
-           mapper.Map<List<ProductDto>>(await db.Products
-                .Include(p => p.Category)
-                .ToListAsync())
-           is IList<ProductDto> stores
-            ? TypedResults.Ok(stores)
-            : TypedResults.NotFound())
-       .WithName("GetProducts")
-       .WithOpenApi();
+        group.MapGet("/products", async Task<Results<Ok<ProductsResponse>, NotFound>> (AppDbContext db, IMapper mapper, int pageSize = 10, int page = 0) =>
+        {
+            var totalProducts = await db.Products.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalProducts / pageSize);
+            
+            if (page > totalPages - 1)
+            {
+                return TypedResults.NotFound();
+            }
 
-        group.MapGet("/product/{storeGuid}/{productGuid}", async Task<Results<Ok<ProductDto>, NotFound>> (Guid storeGuid, Guid productGuid, AppDbContext db, IMapper mapper) =>
+            var products = await db.Products
+                .Skip(page * pageSize)
+                .Take(pageSize)
+                .ToListAsync();
+
+            var productDtos = mapper.Map<List<ProductDto>>(products);
+
+            var response = new ProductsResponse
+            {
+                Productos = productDtos,
+                TotalPages = totalPages
+            };
+
+            return response.Productos is IList<ProductDto> 
+                ? TypedResults.Ok(response)
+                : TypedResults.NotFound();
+        })
+        .WithName("GetProducts")
+        .WithOpenApi();
+
+    group.MapGet("/product/{storeGuid}/{productGuid}", async Task<Results<Ok<ProductDto>, NotFound>> (Guid storeGuid, Guid productGuid, AppDbContext db, IMapper mapper) =>
         {
             return mapper.Map<ProductDto>(await db.Products
                 .Include(p => p.Rainchecks)

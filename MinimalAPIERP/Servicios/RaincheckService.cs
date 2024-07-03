@@ -1,7 +1,7 @@
 ﻿using ERP.Data;
 using ERP;
 using AutoMapper;
-using MinimalAPIERP.Dtos;
+using BlazorStoreApp.Infraestructura.Dtos;
 using MinimalAPIERP.Servicios;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Http.HttpResults;

@@ -1,6 +1,6 @@
-﻿namespace MinimalAPIERP.Dtos
+﻿namespace BlazorStoreApp.Infraestructura.Dtos
 {
-    public class RaincheckCreateDto
+    public record RaincheckCreateDto
     {
         public string? Name { get; set; }
         public Guid ProductId { get; set; }

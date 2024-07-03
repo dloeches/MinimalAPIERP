@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http.HttpResults;
-using MinimalAPIERP.Dtos;
+using BlazorStoreApp.Infraestructura.Dtos;
 
 namespace MinimalAPIERP.Servicios
 {

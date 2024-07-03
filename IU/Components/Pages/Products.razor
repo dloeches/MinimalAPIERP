@@ -1,0 +1,132 @@
+﻿@page "/products"
+
+@using BlazorStoreApp.Infraestructura.Dtos
+@using IU.Services
+
+@rendermode InteractiveServer
+@inject IProductService ProductService
+@inject ICartItemService CartItemService
+@inject NavigationManager Navigation
+
+<h3>Compra tus productos</h3>
+
+@* <ResumenCesta CartItems="cartItems" ProceedToCheckout="ProceedToCheckout" > </ResumenCesta> *@
+<ShoppingCart CartItems="cartItems" ProceedToCheckout="ProceedToCheckout" UpdateCartItemQuantity="UpdateCartItemQuantity" RemoveCartItem="RemoveCartItem"> </ShoppingCart>
+
+<div class="products-grid">
+    @if (productos != null)
+    {
+        foreach (var product in productos)
+        {
+            <div class="product-card">
+                <img src="images/@product.ProductArtUrl" alt="@product.Name" class="product-image" />
+                <div class="product-info">
+                    <h4>@product.Name</h4>
+                    <p>@product.Description</p>
+                    <p class="price">@product.SalePrice €</p>
+                    <button class="btn btn-success" @onclick="() => AddToCart(product)">Add to Cart</button>
+                </div>
+            </div>
+        }
+    }
+</div>
+
+<div class="pagination-container">
+    <button class="btn btn-primary" @onclick="PreviousPage" disabled="@(paginationModel.Page <= 0)">Previous</button>
+    <span class="pagination-text">Page @CurrentPage of @paginationModel.TotalPages</span>
+    <button class="btn btn-primary" @onclick="NextPage" disabled="@(paginationModel.Page >= paginationModel.TotalPages - 1)">Next</button>
+</div>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await LoadCartItems();
+        await LoadProducts();
+    }
+
+    private PaginationModel paginationModel = new PaginationModel { PageSize = 10, Page = 0 };
+    private List<ProductDto> productos = new List<ProductDto>();
+    private List<CartItemDto> cartItems = new List<CartItemDto>();
+
+    private async Task LoadProducts()
+    {
+        var response = await ProductService.GetProductsAsync(paginationModel.Page, paginationModel.PageSize);
+        productos = response.Productos;
+        paginationModel.TotalPages = response.TotalPages;
+    }
+
+    private async Task LoadCartItems()
+    {
+        cartItems = await CartItemService.GetCartItemsAsync();
+    }
+
+    private async Task AddToCart(ProductDto product)
+    {
+        var existingCartItem = cartItems.FirstOrDefault(item => item.Product.Id == product.Id);
+
+        if (existingCartItem != null)
+        {
+            existingCartItem.Count++;
+        }
+        else
+        {
+            var cartItemDto = new CartItemDto
+                {
+                    Id = Guid.NewGuid(),
+                    CartId = "unico",
+                    Product = product,
+                    Count = 1,
+                };
+
+            var createdCartItem = await CartItemService.AddToCartAsync(cartItemDto);
+            cartItems.Add(cartItemDto);
+        }
+    }
+
+    private async Task UpdateCartItemQuantity(CartItemDto cartitem)
+    {
+        //cartitem.Count = newQuantity;
+        await CartItemService.UpdateCartItemAsync(cartitem);
+
+        await LoadCartItems();
+    }
+
+    private async Task RemoveCartItem(Guid itemId)
+    {
+        await CartItemService.DeleteCartItemAsync(itemId);
+
+        await LoadCartItems();
+    }
+
+    private void ProceedToCheckout()
+    {
+        Navigation.NavigateTo("/checkout");
+    }
+
+    private async Task PreviousPage()
+    {
+        if (paginationModel.Page > 0)
+        {
+            paginationModel.Page--;
+            await LoadProducts();
+        }
+    }
+
+    private async Task NextPage()
+    {
+        if (paginationModel.Page < paginationModel.TotalPages - 1)
+        {
+            paginationModel.Page++;
+            await LoadProducts();
+        }
+    }
+
+    private int CurrentPage => paginationModel.Page + 1;
+
+    public class PaginationModel
+    {
+        public int PageSize { get; set; }
+        public int Page { get; set; }
+        public int TotalPages { get; set; }
+    }
+}

@@ -1,6 +1,6 @@
-﻿namespace MinimalAPIERP.Dtos
+﻿namespace BlazorStoreApp.Infraestructura.Dtos
 {
-    public class CategoryDto
+    public record CategoryDto
     {
         public Guid Id { get; set; }
         public string? Name { get; set; }

@@ -29,5 +29,8 @@ app.ConfigureSwagger();
 app.MapStoreApi();
 app.MapProductApi();
 app.MapRaincheckApi();
+app.MapCartItemsApi();
+app.MapOrdersApi();
+app.MapOrderDetailsApi();
 
 app.Run();

@@ -7,7 +7,7 @@ namespace ERP;
 [Index("ProductId", Name = "IX_ProductId")]
 [Index("StoreId", Name = "IX_StoreId")]
 [Index("RaincheckGuid", Name = "IX_RaincheckGuid", IsUnique = true)]
-public partial class Raincheck
+public record Raincheck
 {
     [Key]
     public int RaincheckId { get; set; }

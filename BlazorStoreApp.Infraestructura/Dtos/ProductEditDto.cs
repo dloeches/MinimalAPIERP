@@ -1,10 +1,11 @@
 ﻿using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
 
-namespace MinimalAPIERP.Dtos
+namespace BlazorStoreApp.Infraestructura.Dtos
 {
-    public class ProductCreateDto
+    public record ProductEditDto
     {
+        public Guid Id { get; set; }
         public string? Name { get; set; }
         public string? SkuNumber { get; set; }
         public string Description { get; set; } = null!;

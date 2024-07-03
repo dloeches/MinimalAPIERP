@@ -7,10 +7,6 @@
 	</PropertyGroup>
 	
 	<ItemGroup>
-	  <Compile Remove="Dtos\Dtos.cs" />
-	</ItemGroup>
-	
-	<ItemGroup>
 		<PackageReference Include="AspNetCore.HealthChecks.SqlServer" Version="8.0.2" />
 		<PackageReference Include="AspNetCore.HealthChecks.UI.Client" Version="8.0.1" />
 		
@@ -25,5 +21,9 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Design" PrivateAssets="all" Version="8.0.6" />
 
 		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="8.0.2" />
+	</ItemGroup>
+	
+	<ItemGroup>
+	  <ProjectReference Include="..\BlazorStoreApp.Infraestructura\BlazorStoreApp.Infraestructura.csproj" />
 	</ItemGroup>
 </Project>

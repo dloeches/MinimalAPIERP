@@ -1,0 +1,57 @@
+﻿@using BlazorStoreApp.Infraestructura.Dtos
+
+<div class="cart-items">
+    <ul class="cart-list">
+        @if (CartItems.Any())
+        {
+            foreach (var item in CartItems)
+            {
+                <li>
+                    @item.Product.Name - @item.Product.SalePrice: €
+                    <button class="btn btn-outline-secondary" @onclick="() => OnUpdateCartItemQuantity(item, item.Count - 1)" disabled="@(item.Count <= 1)">-</button>
+                    <input type="number" value="@item.Count" min="1" readonly>
+                    <button class="btn btn-outline-secondary" @onclick="() => OnUpdateCartItemQuantity(item, item.Count + 1)">+</button>
+                    <button class="btn btn-danger" alt="Eliminar producto" @onclick="() => OnRemoveCartItem(item.Id)">Eliminar</button>
+                </li>
+            }
+            <li class="cart-item">
+                <strong>Total: @CartItems.Sum(item => item.Count * item.Product.SalePrice):€</strong>
+                <button class="checkout-button" @onclick="OnProceedToCheckout">
+                    <img src="images/check-out-icon.png" alt="Checkout" class="checkout-icon" />Termina pedido
+                </button>
+            </li>
+        }
+     </ul>
+</div>
+    
+@code {
+    [Parameter] public List<CartItemDto> CartItems { get; set; } = new List<CartItemDto>();
+    [Parameter] public EventCallback ProceedToCheckout { get; set; }
+    [Parameter] public EventCallback<CartItemDto> UpdateCartItemQuantity { get; set; }
+    [Parameter] public EventCallback<Guid> RemoveCartItem { get; set; }
+
+    private async Task OnUpdateCartItemQuantity(CartItemDto cartitem, int newQuantity)
+    {
+        cartitem.Count = newQuantity;
+        if (UpdateCartItemQuantity.HasDelegate)
+        {
+            await UpdateCartItemQuantity.InvokeAsync(cartitem);
+        }
+    }
+    
+    private async Task OnRemoveCartItem(Guid itemId)
+    {
+        if (RemoveCartItem.HasDelegate)
+        {
+            await RemoveCartItem.InvokeAsync(itemId);
+        }
+    }
+
+    private async Task OnProceedToCheckout()
+    {
+        if (ProceedToCheckout.HasDelegate)
+        {
+            await ProceedToCheckout.InvokeAsync(null);
+        }
+    }
+}

@@ -1,0 +1,23 @@
+﻿@page "/order-confirmation"
+
+@rendermode InteractiveServer
+
+@inject NavigationManager Navigation
+
+<h3>Order Confirmada</h3>
+
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Gracias por tu orden!</h5>
+        <p class="card-text">Su pedido ha sido realizado exitosamente.</p>
+        
+        <button class="btn btn-primary" @onclick="GoToProducts">Volver a Productos</button>
+    </div>
+</div>
+
+@code {
+    private void GoToProducts()
+    {
+        Navigation.NavigateTo("/products");
+    }
+}

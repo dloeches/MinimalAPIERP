@@ -1,6 +1,6 @@
-﻿namespace MinimalAPIERP.Dtos
+﻿namespace BlazorStoreApp.Infraestructura.Dtos
 {
-    public class CartItemDto
+    public record CartItemDto
     {
         public Guid Id { get; set; }
         public string? CartId { get; set; } 

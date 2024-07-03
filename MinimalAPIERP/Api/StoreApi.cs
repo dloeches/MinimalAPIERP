@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ERP.Data;
-using MinimalAPIERP.Dtos;
+using BlazorStoreApp.Infraestructura.Dtos;
 
 namespace ERP.Api;
 
@@ -31,9 +31,9 @@ internal static class StoreApi
         .WithName("GetStore")
         .WithOpenApi();
 
-        group.MapPost("/stores", async Task<Created<StoreDto>>(StoreCreateDto storeCreatedto, AppDbContext db, IMapper mapper) =>
+        group.MapPost("/stores", async Task<Created<StoreDto>>(StoreDto storedto, AppDbContext db, IMapper mapper) =>
         {
-            var store = mapper.Map<Store>(storeCreatedto);
+            var store = mapper.Map<Store>(storedto);
             db.Stores.Add(store);
             await db.SaveChangesAsync();
                         

@@ -78,7 +78,9 @@ namespace ERP.Extensions
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IProductService, ProductService>();
             services.AddScoped<IRaincheckService, RaincheckService>();
+            services.AddScoped<ICartItemService, CartItemService>();
             services.AddScoped<IStoreService, StoreService>();
+            services.AddScoped<IOrderService, OrderService>();
 
             return services;
         }

@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 using ERP.Data;
-using MinimalAPIERP.Dtos;
+using BlazorStoreApp.Infraestructura.Dtos;
 using Microsoft.CodeAnalysis;
 using MinimalAPIERP.Servicios;
 

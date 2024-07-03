@@ -6,7 +6,7 @@ namespace ERP;
 
 [Index("ProductId", Name = "IX_ProductId")]
 [Index("CartItemGuid", Name = "IX_CartItemGuid", IsUnique = true)]
-public partial class CartItem
+public record CartItem
 {
     [Key]
     public int CartItemId { get; set; }
@@ -21,7 +21,7 @@ public partial class CartItem
     public int Count { get; set; }
 
     [Column(TypeName = "datetime")]
-    public DateTime DateCreated { get; set; }
+    public DateTime DateCreated { get; set; } = DateTime.Now;
 
     [ForeignKey("ProductId")]
     [InverseProperty("CartItems")]

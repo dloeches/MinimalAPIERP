@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore;
 namespace ERP;
 
 [Index("StoreGuid", Name = "IX_StoreGuid", IsUnique = true)]
-public partial class Store
+public record Store
 {
     [Key]
     public int StoreId { get; set; }
