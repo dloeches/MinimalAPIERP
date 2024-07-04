@@ -10,52 +10,78 @@
 
 <h3>Checkout</h3>
 
-<EditForm Model="@order" OnValidSubmit="HandleValidSubmit">
-    <DataAnnotationsValidator />
-    <ValidationSummary />
+<div class="checkout-container">
+    <div class="form-container">
+        <EditForm Model="@order" OnValidSubmit="HandleValidSubmit">
+            <DataAnnotationsValidator />
+            <ValidationSummary />
 
-    <div class="form-group">
-        <label for="name">Name:</label>
-        <InputText id="name" class="form-control" @bind-Value="order.Name" />
+            <div class="form-group">
+                <label for="name">Nombre:</label>
+                <InputText id="name" class="form-control" @bind-Value="order.Name" />
+            </div>
+
+            <div class="form-group">
+                <label for="address">Dirección:</label>
+                <InputText id="address" class="form-control" @bind-Value="order.Address" />
+            </div>
+
+            <div class="form-group">
+                <label for="city">Ciudad:</label>
+                <InputText id="city" class="form-control" @bind-Value="order.City" />
+            </div>
+
+            <div class="form-group">
+                <label for="state">Provincia:</label>
+                <InputText id="state" class="form-control" @bind-Value="order.State" />
+            </div>
+
+            <div class="form-group">
+                <label for="postalCode">Postal Code:</label>
+                <InputText id="postalCode" class="form-control" @bind-Value="order.PostalCode" />
+            </div>
+
+            <div class="form-group">
+                <label for="country">País:</label>
+                <InputText id="country" class="form-control" @bind-Value="order.Country" />
+            </div>
+
+            <div class="form-group">
+                <label for="phone">Teléfono:</label>
+                <InputText id="phone" class="form-control" @bind-Value="order.Phone" />
+            </div>
+
+            <div class="form-group">
+                <label for="email">Email:</label>
+                <InputText id="email" type="email" class="form-control" @bind-Value="order.Email" />
+            </div>
+
+    @*         <button type="submit" class="btn btn-primary">Place Order</button> *@
+            <button type="submit" @* @onclick="HandleValidSubmit" *@ class="btn btn-success">Finalizar Orden</button>
+        </EditForm>
     </div>
 
-    <div class="form-group">
-        <label for="address">Address:</label>
-        <InputText id="address" class="form-control" @bind-Value="order.Address" />
+    <div class="order-container">
+        <ul class="checkout-list">
+            @if (cartItems.Any())
+            {
+                foreach (var item in cartItems)
+                {
+                    <li class="cart-item">
+                        @item.Product.Name - @item.Product.SalePrice: €
+                        <div class="quantity-container">
+                            <label>Ud.</label>
+                            <input type="number" value="@item.Count" min="1" readonly>
+                        </div>
+                    </li>
+                }
+                <li class="total">
+                    <strong>Total: @order.Total €</strong>
+                </li>
+            }
+        </ul>
     </div>
-
-    <div class="form-group">
-        <label for="city">City:</label>
-        <InputText id="city" class="form-control" @bind-Value="order.City" />
-    </div>
-
-    <div class="form-group">
-        <label for="state">State:</label>
-        <InputText id="state" class="form-control" @bind-Value="order.State" />
-    </div>
-
-    <div class="form-group">
-        <label for="postalCode">Postal Code:</label>
-        <InputText id="postalCode" class="form-control" @bind-Value="order.PostalCode" />
-    </div>
-
-    <div class="form-group">
-        <label for="country">Country:</label>
-        <InputText id="country" class="form-control" @bind-Value="order.Country" />
-    </div>
-
-    <div class="form-group">
-        <label for="phone">Phone:</label>
-        <InputText id="phone" class="form-control" @bind-Value="order.Phone" />
-    </div>
-
-    <div class="form-group">
-        <label for="email">Email:</label>
-        <InputText id="email" type="email" class="form-control" @bind-Value="order.Email" />
-    </div>
-
-    <button type="submit" class="btn btn-primary">Place Order</button>
-</EditForm>
+</div>
 
 @code {
     private OrderDto order = new OrderDto
@@ -88,11 +114,9 @@
     private async Task HandleValidSubmit()
     {
         await OrderService.CreateOrderAsync(order);
-        
+
         await CartItemService.ClearCartByCartAsync("unico");
 
         Navigation.NavigateTo("/order-confirmation");
-        
-     
     }
 }

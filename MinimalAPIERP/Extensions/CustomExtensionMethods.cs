@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Diagnostics.HealthChecks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Diagnostics.HealthChecks;
 using Microsoft.OpenApi.Models;
+using MinimalAPIERP.Extensions;
 using MinimalAPIERP.Servicios;
 
 namespace ERP.Extensions
@@ -108,8 +109,12 @@ namespace ERP.Extensions
 
         public static IEndpointRouteBuilder MapCustom(this IEndpointRouteBuilder routes, IConfiguration configuration)
         {
-
             return routes;
+        }
+
+        public static void ConfigureExceptionMiddleware(this WebApplication app)
+        {
+            app.UseMiddleware<ExceptionHandlingMiddleware>();
         }
 
         public static void DatabaseInit(this WebApplication app)

@@ -1,6 +1,7 @@
 ﻿// FASE 1
 using ERP.Api;
 using ERP.Extensions;
+using MinimalAPIERP.Extensions;
 using MinimalAPIERP.Infraestructure.Automapper;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -22,6 +23,7 @@ app.MapCustomHealthCheck(builder.Configuration);
 
 app.UseAntiforgery();
 
+app.ConfigureExceptionMiddleware();
 app.DatabaseInit();
 
 app.ConfigureSwagger();
